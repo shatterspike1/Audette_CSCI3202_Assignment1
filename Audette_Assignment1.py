@@ -1,9 +1,9 @@
-import Lib
+from queue import *
 
 class IntQueue:
     
     def __init__(self):
-        self.queue = q.Queue()
+        self.queue = Queue()
 
     def enqueue(self, x):
         if isinstance(x, int):
@@ -47,7 +47,6 @@ class BTNode:
 
     def assignRight(self, v):
         self.rightc = BTNode(v, self)
-        
 
 class BTree:
 
@@ -61,9 +60,9 @@ class BTree:
         pN = self.preorder(self.root, parentValue)
         if pN == None:
             print('Parent not found')
-        elif pN.left == None:
+        elif pN.leftc == None:
             pN.assignLeft(value)
-        elif pN.right == None:
+        elif pN.rightc == None:
             pN.assignRight(value)
         else:
             print('Parent has two children, node not added')
@@ -71,7 +70,10 @@ class BTree:
     def delete(self, value):
         n = self.preorder(self.root, value)
         if (n.leftc == None) and (n.rightc == None):
-            n = None
+            if n.parent.leftc == n:
+                n.parent.leftc = None
+            else:
+                n.parent.rightc = None
         else:
             print('Node not deleted, has children')
 
@@ -82,8 +84,8 @@ class BTree:
         if node == None:
             return
         print(node.key)
-        preprint(node.leftc)
-        preprint(node.rightc)
+        self.preprint(node.leftc)
+        self.preprint(node.rightc)
 
     def preorder(self, node, value):
         if node == None:
@@ -97,21 +99,12 @@ class BTree:
         elif rc != None:
             return rc
         else:
-            print('Node not found')
             return None
                 
 class GVert:
 
-    def __init__(self, adj=[]):
-        self.adj = adj
-        self.dist = int("inf")
-        self.parent = None
-
-    def setDist(self, d):
-        self.dist = d
-
-    def setParent(self, p):
-        self.parent = p
+    def __init__(self):
+        self.adj = []
 
     def addAdj(self, n):
         if n in self.adj:
@@ -129,7 +122,7 @@ class GGraph:
         self.graph = {}
 
     def addVertex(self, value):
-        if self.graph[value]:
+        if value in self.graph:
             print("Vertex already exists")
         else:
             self.graph[value] = GVert()
@@ -147,22 +140,57 @@ class GGraph:
         else:
             print("Vertex not found.")
 
-    def find(self, value):
-        for k, v in self.graph():
-            setDist(int("inf"))
-            setParent(None)
 
-        iq = iq.IntQueue()
+tuquo = IntQueue()
+print("\nTesting Queue")
+for i in range(1,11):
+    tuquo.enqueue(i)
+for i in range(1,11):
+    l = tuquo.dequeue()
+    print(l)
 
-        self.graph[value].setDist(0)
-        iq.enqueue(value)
+plates = IntStack()
+print("\nTesting Stack")
+for i in range(1,11):
+    plates.push(i)
+for i in range(1,11):
+    l = plates.pop()
+    print(l)
 
-        while not iq.isEmpty():
+print("\nTesting Binary Tree")
+poplar = BTree(1)
+poplar.add(2, 1)
+poplar.add(3, 1)
+poplar.add(4, 2)
+poplar.add(5, 2)
+poplar.add(6, 3)
+poplar.add(7, 3)
+poplar.add(8, 4)
+poplar.add(9, 4)
+poplar.add(10, 5)
+poplar.pprint()
+print("\nDeleting Children")
+poplar.delete(10)
+poplar.delete(8)
+poplar.pprint()
 
-            u = iq.dequeue()
+print("\nTesting Graph")
+spreadsheet = GGraph()
+for i in range(1, 11):
+    spreadsheet.addVertex(i)
+spreadsheet.addEdge(1, 2)
+spreadsheet.addEdge(1, 3)
+spreadsheet.addEdge(1, 4)
+spreadsheet.addEdge(1, 10)
+spreadsheet.addEdge(2, 3)
+spreadsheet.addEdge(2, 4)
+spreadsheet.addEdge(4, 9)
+spreadsheet.addEdge(3, 6)
+spreadsheet.addEdge(3, 7)
+spreadsheet.addEdge(3, 8)
+spreadsheet.findVertex(1)
+spreadsheet.findVertex(2)
+spreadsheet.findVertex(3)
+spreadsheet.findVertex(4)
+spreadsheet.findVertex(10)
 
-            for n in u.adj:
-                if n.dist == int("inf"):
-                    n.setDist(u.dist + 1)
-                    n.setParent(u)
-                    iq.enqueue(n)
